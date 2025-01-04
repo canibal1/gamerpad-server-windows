@@ -6,7 +6,7 @@ binaries += collect_dynamic_libs('vgamepad')
 
 
 a = Analysis(
-    ['server_gui.py'],
+    ['C:\\Users\\frkn_\\OneDrive\\Desktop\\github-repos\\gamepad-server-windows\\server_gui.py'],
     pathex=[],
     binaries=binaries,
     datas=[],
