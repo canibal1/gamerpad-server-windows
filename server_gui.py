@@ -15,8 +15,9 @@ from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QThread
 from PIL import Image
+from typing import Dict
 
-gamepad={}
+gamepad: Dict[str, vg.VX360Gamepad] = {}
 gameControls = {
     'A': vg.XUSB_BUTTON.XUSB_GAMEPAD_A,
     'B': vg.XUSB_BUTTON.XUSB_GAMEPAD_B,
@@ -32,11 +33,10 @@ gameControls = {
     'RS_CLICK': vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB,
     'LB': vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
     'RB': vg.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER,
-    'L_TRIGGER': vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
-    'R_TRIGGER': vg.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
     'GUIDE': vg.XUSB_BUTTON.XUSB_GAMEPAD_GUIDE,
 }
 sio = socketio.AsyncServer(cors_allowed_origins='*')
+sio.always_connect=True
 
 # Aiohttp server
 async def handle(request):
@@ -53,32 +53,6 @@ sio.always_connect=True
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 logger = logging.getLogger()
 
-# Function to generate QR code with the IP address
-def generate_qr_code():
-    # Get local machine's IPv4 address
-    ip_address = socket.gethostbyname(socket.gethostname())
-    
-    # Generate QR code
-    qr = qrcode.make(f'http://{ip_address}:8080')  # Assuming server runs on port 8080
-    
-    # Create a Tkinter window
-    window = tk.Tk()
-    window.title("QR Code")
-    
-    # Convert QR code to image format that Tkinter can use
-    img_byte_array = io.BytesIO()
-    qr.save(img_byte_array)
-    img_byte_array.seek(0)
-    img = Image.open(img_byte_array)
-    img_tk = ImageTk.PhotoImage(img)
-
-    # Display the QR code image in the window
-    label = tk.Label(window, image=img_tk)
-    label.image = img_tk  # Keep a reference to avoid garbage collection
-    label.pack()
-
-    # Show the window
-    window.mainloop()
 
 # Event for new client connections
 @sio.event
@@ -123,7 +97,9 @@ def right_trigger(sid, data):
 
 @sio.on('press_button')
 def press_button(sid, data):
+
     button = gameControls.get(data['id'])
+    print(data)
     if button:
         logger.info(f"Received button press from {sid}: {data['id']}")
         gamepad[sid].press_button(button)
@@ -196,7 +172,7 @@ def generate_qr_code():
     
     # Generate QR code
     qr = qrcode.make(f'http://{ip_address}:8080')  # Assuming server runs on port 8080
-    
+    print( "ip_address" +ip_address)
     # Convert QR code to an image format that PyQt5 can use
     img_byte_array = io.BytesIO()
     qr.save(img_byte_array, format="PNG")
