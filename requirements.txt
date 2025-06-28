@@ -1,0 +1,7 @@
+PySide6>=6.0.0
+python-socketio>=5.0.0
+aiohttp>=3.8.0
+qrcode>=7.0
+vgamepad>=0.0.3
+pillow>=8.0.0
+pip-licenses>=5.0.0

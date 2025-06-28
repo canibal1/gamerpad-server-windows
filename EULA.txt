@@ -1,0 +1,85 @@
+EFFECTIVE DATE: June 28, 2025
+
+ACCEPTANCE:
+By clicking “I Agree” during installation or by downloading, installing, or using the Application, the Licensee acknowledges that they have read, understood, and agree to be bound by this Agreement as of the Effective Date.
+
+END USER LICENSE AGREEMENT (EULA)
+
+This End User License Agreement ("Agreement") is entered into between CoreOrbits and the individual or entity who downloads, installs, or uses the desktop application GamerPad ("Application").
+
+By downloading, copying, installing, or using the Application, you (“Licensee”) agree to be bound by the terms of this Agreement. If you do not agree to these terms, do not install or use the Application.
+
+1. DEFINITIONS  
+   • “Installation Package” means the binary installer files of the Application provided to the Licensee.  
+   • “Source Code” means the human-readable code of the Application published under the MIT License on GitHub.
+
+2. GRANT OF LICENSE  
+   CoreOrbits hereby grants the Licensee a limited, non-exclusive, non-transferable, revocable license to:  
+   a) Install and use one copy of the Application on a single computer.  
+   b) Make one backup copy of the Installation Package solely for archival purposes.
+
+3. RESTRICTIONS  
+   The Licensee shall not:  
+   a) Distribute, sell, rent, lease, sublicense, or commercially exploit the Application in any manner.  
+   b) Modify, decompile, reverse engineer, disassemble, or create derivative works of the officially distributed binary Installation Package.  
+   c) Bypass, remove, deactivate, or circumvent any technological protection measures in the Application.
+
+4. PRIVACY AND DATA COLLECTION  
+   The Application does not collect, transmit, or store any personal or usage data from the Licensee. No analytics, telemetry, crash reports, or similar mechanisms are employed.
+
+5. OPEN SOURCE AND MIT LICENSE  
+   The Application’s Source Code is licensed under the MIT License (https://opensource.org/licenses/MIT) and is publicly available on GitHub. This Agreement applies only to CoreOrbits’ compiled binary Installation Package and any derivative works thereof distributed by CoreOrbits; the Source Code remains governed solely by the MIT License, and users retain all rights granted under that license for any code obtained from the public repository.
+
+5.a OPEN SOURCE COMPILATION  
+   The Licensee may compile and redistribute the Application from the MIT-licensed Source Code under the terms of the MIT License, provided that no CoreOrbits-branded binaries or trademarks are included in such distributions.
+
+6. THIRD-PARTY COMPONENTS AND LICENSES  
+   The Application includes the following third-party libraries under the indicated licenses, which the Licensee must use in compliance with their respective terms:  
+   • PySide6 (LGPL v3)  
+   • python-socketio (MIT License)  
+   • aiohttp (Apache 2.0 License)  
+   • qrcode (BSD License)  
+   • vgamepad (MIT License)  
+   • Pillow (MIT-CMU License)  
+   • pip-licenses (MIT License)  
+
+   CoreOrbits disclaims all liability arising from third-party components; any support or issues must be directed to the respective project maintainers.
+
+6.a EXPORT COMPLIANCE  
+   Licensee agrees to comply with all applicable export and import control laws and regulations in connection with its use of the Application.
+
+7. DISCLAIMER OF WARRANTY  
+   THE APPLICATION IS PROVIDED “AS IS” AND “WITH ALL FAULTS.” TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, COREORBITS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+8. LIMITATION OF LIABILITY  
+   TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL COREORBITS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF THE USE OF OR INABILITY TO USE THE APPLICATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+9. TERMINATION  
+   This Agreement is effective until terminated. The Licensee’s rights under this Agreement will terminate automatically without notice if the Licensee fails to comply with any term of this Agreement. Upon termination, the Licensee must destroy all copies of the Application.
+
+9.a INDEMNIFICATION  
+   Licensee shall indemnify, defend, and hold harmless CoreOrbits and its affiliates, officers, directors, employees, and agents from and against any and all claims, liabilities, damages, losses, or expenses (including reasonable attorneys’ fees) arising out of or related to Licensee’s breach of this Agreement, use of the Application, or violation of any third-party rights.
+
+10. GOVERNING LAW AND JURISDICTION  
+    This Agreement shall be governed by and construed in accordance with the laws of the Republic of Turkey. Any disputes arising out of or relating to this Agreement shall be subject to the exclusive jurisdiction of the Istanbul (Anatolian) Courts and Enforcement Offices.
+
+11. CONTACT INFORMATION  
+    For support or questions, please contact:  
+    CoreOrbits  
+    Email: support@coreorbits.com
+
+12. UPDATES AND SUPPORT  
+    CoreOrbits may, at its sole discretion, provide updates, patches, or new versions of the Application. CoreOrbits has no obligation to provide any updates, upgrades, or support services unless otherwise agreed in a separate written agreement.
+
+13. WAIVER, ASSIGNMENT, AND SEVERABILITY  
+    a) Waiver: No failure or delay by CoreOrbits in exercising any right under this Agreement shall operate as a waiver of that right.  
+    b) Assignment: The Licensee may not assign or transfer this Agreement or any rights hereunder without CoreOrbits’ prior written consent; CoreOrbits may assign its rights without restriction.  
+    c) Severability: If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall remain in full force and effect.
+
+14. AMENDMENT; NOTIFICATION OF CHANGES  
+    CoreOrbits reserves the right to modify or amend this Agreement at any time. Material changes will be published on CoreOrbits’ official website or delivered via in-Application notification. Continued use of the Application after such notice constitutes acceptance of the amended terms.
+
+15. ENTIRE AGREEMENT  
+    This Agreement constitutes the entire agreement between the parties concerning its subject matter and supersedes all prior or contemporaneous understandings, agreements, or representations.
+
+END OF AGREEMENT
