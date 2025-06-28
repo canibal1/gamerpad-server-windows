@@ -23,13 +23,13 @@ jobs:
 
       - name: Build exe with PyInstaller
         run: |
-          pyinstaller --onefile --noconsole \
-            --name "CoreOrbits-GamerPad" \
-            --icon "app_icon.ico" \
-            --collect-binaries vgamepad \
-            --hidden-import engineio.async_drivers.aiohttp \
-            --hidden-import engineio.async_aiohttp \
-            --add-data "licences.txt;." \
+          pyinstaller --onefile --noconsole `
+            --name "CoreOrbits-GamerPad" `
+            --icon "app_icon.ico" `
+            --collect-binaries vgamepad `
+            --hidden-import engineio.async_drivers.aiohttp `
+            --hidden-import engineio.async_aiohttp `
+            --add-data "licences.txt;." `
             coreorbits_gamerpad_server.py
 
       - name: Download latest ViGEmBus EXE
@@ -48,7 +48,7 @@ jobs:
 
       - name: Package installer with Inno Setup
         run: |
-          iscc installer.iss
+          iscc gamerpad.iss
 
       - name: Publish GitHub Release and Upload Installer
         uses: ncipollo/release-action@v1
