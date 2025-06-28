@@ -31,20 +31,31 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - name: Install ViGEmBus driver via Winget silently
+
+      - name: Download ViGEmBus installer
         shell: pwsh
         run: |
-          winget install --id=ViGEm.ViGEmBus -e --silent `
-            --accept-package-agreements --accept-source-agreements `
-            --override "/norestart"  # Suppress UI and auto-accept license
-            
+          # Fetch latest release metadata
+          $resp = Invoke-RestMethod -Uri "https://api.github.com/repos/ViGEm/ViGEmBus/releases/latest"
+          # Pick the EXE-wrapper asset
+          $url = ($resp.assets | Where-Object { $_.name -match "ViGEmBus_.*_x64_x86_arm64\.exe$" } | Select-Object -First 1).browser_download_url
+          Invoke-WebRequest -Uri $url -OutFile "ViGEmBus.exe"
+
+      - name: Silent install ViGEmBus
+        shell: pwsh
+        run: |
+          # Install driver without UI; if already installed, ignore failures
+          try {
+            Start-Process msiexec.exe -ArgumentList '/i','ViGEmBus.exe','/qn','/norestart' -Wait -NoNewWindow
+          } catch {
+            Write-Host "ViGEmBus install warning (possibly already installed), continuing..."
+          }
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
-
-      
 
       - name: Build exe with PyInstaller
         shell: pwsh  # Use PowerShell so we can use backtick (`) for line continuation
@@ -61,11 +72,9 @@ jobs:
       - name: Download latest ViGEmBus EXE
         shell: pwsh
         run: |
-          # Fetch latest release metadata
+          # Fetch latest release metadata again for completeness
           $response = Invoke-RestMethod -Uri "https://api.github.com/repos/nefarius/ViGEmBus/releases/latest"
-          # Select the asset matching the EXE pattern
           $asset = $response.assets | Where-Object { $_.name -match "ViGEmBus_.*_x64_x86_arm64\.exe$" }
-          # Download the EXE to a fixed filename
           Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ViGEmBus_latest.exe"
 
       - name: Install Inno Setup
