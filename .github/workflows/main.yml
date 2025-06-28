@@ -60,10 +60,10 @@ jobs:
 
       - name: Package installer with Inno Setup
         run: |
-          iscc installer.iss
+          iscc gamerpad.iss
 
       - name: Publish GitHub Release and Upload Installer
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1s
         with:
           tag: ${{ github.ref }}
           name: Release ${{ github.ref }}
