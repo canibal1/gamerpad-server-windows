@@ -18,6 +18,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          # Cache pip downloads and built wheels to speed up subsequent runs
+          path: |
+            ~/.cache/pip
+            C:\Users\runneradmin\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
       - name: Set up Python 3.x
         uses: actions/setup-python@v4
         with:
@@ -25,11 +34,8 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          # Upgrade pip
           python -m pip install --upgrade pip
-          # Install from requirements.txt
           pip install -r requirements.txt
-          # Install PyInstaller
           pip install pyinstaller
 
       - name: Build exe with PyInstaller
