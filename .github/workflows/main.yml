@@ -32,24 +32,16 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Download ViGEmBus installer
+      - name: Download ViGEmBus MSI
         shell: pwsh
         run: |
-          # Fetch latest release metadata
-          $resp = Invoke-RestMethod -Uri "https://api.github.com/repos/ViGEm/ViGEmBus/releases/latest"
-          # Pick the EXE-wrapper asset
-          $url = ($resp.assets | Where-Object { $_.name -match "ViGEmBus_.*_x64_x86_arm64\.exe$" } | Select-Object -First 1).browser_download_url
-          Invoke-WebRequest -Uri $url -OutFile "ViGEmBus.exe"
+          # Download the ViGEmBus installer
+          Invoke-WebRequest `
+            -Uri "https://github.com/nefarius/ViGEmBus/releases/download/setup-v1.17.333/ViGEmBusSetup_x64.msi" `
+            -OutFile "ViGEmBus_Setup.msi"
 
-      - name: Silent install ViGEmBus
-        shell: pwsh
-        run: |
-          # Install driver without UI; if already installed, ignore failures
-          try {
-            Start-Process msiexec.exe -ArgumentList '/i','ViGEmBus.exe','/qn','/norestart' -Wait -NoNewWindow
-          } catch {
-            Write-Host "ViGEmBus install warning (possibly already installed), continuing..."
-          }
+      - name: Install ViGEmBus MSI
+        run: msiexec /i ViGEmBus_Setup.msi /quiet /norestart
 
       - name: Install Python dependencies
         run: |
@@ -72,9 +64,11 @@ jobs:
       - name: Download latest ViGEmBus EXE
         shell: pwsh
         run: |
-          # Fetch latest release metadata again for completeness
+          # Fetch latest release metadata
           $response = Invoke-RestMethod -Uri "https://api.github.com/repos/nefarius/ViGEmBus/releases/latest"
+          # Select the asset matching the EXE pattern
           $asset = $response.assets | Where-Object { $_.name -match "ViGEmBus_.*_x64_x86_arm64\.exe$" }
+          # Download the EXE to a fixed filename
           Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ViGEmBus_latest.exe"
 
       - name: Install Inno Setup
