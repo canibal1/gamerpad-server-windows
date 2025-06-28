@@ -23,9 +23,13 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install PyInstaller
+      - name: Install Python dependencies
         run: |
+          # Upgrade pip
           python -m pip install --upgrade pip
+          # Install from requirements.txt
+          pip install -r requirements.txt
+          # Install PyInstaller
           pip install pyinstaller
 
       - name: Build exe with PyInstaller
@@ -56,7 +60,7 @@ jobs:
 
       - name: Package installer with Inno Setup
         run: |
-          iscc gamerpad.iss
+          iscc installer.iss
 
       - name: Publish GitHub Release and Upload Installer
         uses: ncipollo/release-action@v1
