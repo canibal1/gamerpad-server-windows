@@ -1,0 +1,58 @@
+on:
+  push:
+    # Trigger on new version tags like v1.0.0
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Build exe with PyInstaller
+        run: |
+          pyinstaller --onefile --noconsole \
+            --name "CoreOrbits-GamerPad" \
+            --icon "app_icon.ico" \
+            --collect-binaries vgamepad \
+            --hidden-import engineio.async_drivers.aiohttp \
+            --hidden-import engineio.async_aiohttp \
+            --add-data "licences.txt;." \
+            coreorbits_gamerpad_server.py
+
+      - name: Download latest ViGEmBus EXE
+        shell: powershell
+        run: |
+          # Fetch latest release metadata
+          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/nefarius/ViGEmBus/releases/latest"
+          # Select the asset matching the EXE pattern
+          $asset = $response.assets | Where-Object { $_.name -match "ViGEmBus_.*_x64_x86_arm64\.exe$" }
+          # Download the EXE to a fixed filename
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ViGEmBus_latest.exe"
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup -y
+
+      - name: Package installer with Inno Setup
+        run: |
+          iscc installer.iss
+
+      - name: Publish GitHub Release and Upload Installer
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          files: installers/CoreOrbits-GamerPad Installer.exe
