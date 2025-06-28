@@ -32,6 +32,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install ViGEmBus driver silently
+        run: |
+          choco install vigembus -y   # Install ViGEmBus driver silently so pip install won't prompt
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
