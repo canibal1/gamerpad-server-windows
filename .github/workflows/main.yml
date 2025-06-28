@@ -63,7 +63,7 @@ jobs:
           iscc gamerpad.iss
 
       - name: Publish GitHub Release and Upload Installer
-        uses: ncipollo/release-action@v1s
+        uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref }}
           name: Release ${{ github.ref }}
