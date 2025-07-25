@@ -13,7 +13,11 @@ import vgamepad as vg
 import importlib.metadata as importlib_metadata
 from typing import Dict
 from pathlib import Path
+import importlib.metadata as importlib_metadata
 import re
+
+# Zeroconf for mDNS service discovery
+from zeroconf import Zeroconf, ServiceInfo
 
 # Gamepad setup
 gamepad: Dict[str, vg.VX360Gamepad] = {}
@@ -39,7 +43,19 @@ gameControls = {
 sio = socketio.AsyncServer(cors_allowed_origins='*')
 sio.always_connect = True
 
-# Aiohttp server
+# Helper to get the local IP address
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # connect to DNS server to find out local IP
+        s.connect(('8.8.8.8', 80))
+        return s.getsockname()[0]
+    except Exception:
+        return '127.0.0.1'
+    finally:
+        s.close()
+
+# Aiohttp server with mDNS registration
 def start_server():
     app = web.Application()
     sio.attach(app)
@@ -48,7 +64,30 @@ def start_server():
         return web.Response(text="Web server running")
 
     app.router.add_get('/', handle)
-    web.run_app(app, port=8080)
+
+    # Zeroconf setup for mDNS service
+    zeroconf = Zeroconf()
+    ip_address = get_ip()
+    print(socket.gethostname())
+    port = 8080
+    properties = {}  # you can add custom properties here
+    service_info = ServiceInfo(
+        type_="_myservice._tcp.local.",
+        name=f"GamerPad Service._myservice._tcp.local.",
+        addresses=[socket.inet_aton(ip_address)],
+        port=port,
+        properties=properties,
+        server=f"{socket.gethostname()}.local.",
+    )
+    zeroconf.register_service(service_info)
+    logger.info(f"mDNS service registered: {ip_address}:{port} as {service_info.name}")
+
+    try:
+        web.run_app(app, port=port)
+    finally:
+        zeroconf.unregister_service(service_info)
+        zeroconf.close()
+        logger.info("mDNS service unregistered")
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
@@ -125,12 +164,9 @@ def dpad(sid, data):
 
 # QR Code generator
 def generate_qr_code():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip_address = s.getsockname()[0]
-    qr = qrcode.make(f'http://{ip_address}:8080')
-    # Double the QR code size
-    qr = qr.resize((qr.size[0] , qr.size[1] ))
+    ip = get_ip()
+    qr = qrcode.make(f'http://{ip}:8080')
+    # you can adjust size if needed
     buf = io.BytesIO()
     qr.save(buf, format="PNG")
     buf.seek(0)
