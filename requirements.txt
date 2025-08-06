@@ -5,4 +5,4 @@ qrcode>=7.0
 vgamepad>=0.0.3
 pillow>=8.0.0
 pip-licenses>=5.0.0
-zeroconf
+ssdpy

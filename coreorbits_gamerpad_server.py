@@ -13,11 +13,10 @@ import vgamepad as vg
 import importlib.metadata as importlib_metadata
 from typing import Dict
 from pathlib import Path
-import importlib.metadata as importlib_metadata
 import re
 
-# Zeroconf for mDNS service discovery
-from zeroconf import Zeroconf, ServiceInfo
+# SSDP/UPnP support
+from ssdpy import SSDPServer
 
 # Gamepad setup
 gamepad: Dict[str, vg.VX360Gamepad] = {}
@@ -55,7 +54,7 @@ def get_ip():
     finally:
         s.close()
 
-# Aiohttp server with mDNS registration
+# Aiohttp server with SSDP registration
 def start_server():
     app = web.Application()
     sio.attach(app)
@@ -65,29 +64,21 @@ def start_server():
 
     app.router.add_get('/', handle)
 
-    # Zeroconf setup for mDNS service
-    zeroconf = Zeroconf()
+    # SSDP/UPnP advertisement
     ip_address = get_ip()
-    print(socket.gethostname())
     port = 8080
-    properties = {}  # you can add custom properties here
-    service_info = ServiceInfo(
-        type_="_myservice._tcp.local.",
-        name=f"GamerPad Service._myservice._tcp.local.",
-        addresses=[socket.inet_aton(ip_address)],
-        port=port,
-        properties=properties,
-        server=f"{socket.gethostname()}.local.",
+    ssdp_server = SSDPServer(
+        "GamerPad Service",                      # Unique Service Name
+        location=f"http://{ip_address}:{port}/"  # URL clients will fetch
     )
-    zeroconf.register_service(service_info)
-    logger.info(f"mDNS service registered: {ip_address}:{port} as {service_info.name}")
+    threading.Thread(
+        target=ssdp_server.serve_forever,
+        daemon=True
+    ).start()
+    logger.info(f"SSDP service started: usn=GamerPad Service at http://{ip_address}:{port}/")
 
-    try:
-        web.run_app(app, port=port)
-    finally:
-        zeroconf.unregister_service(service_info)
-        zeroconf.close()
-        logger.info("mDNS service unregistered")
+    # Start the HTTP + Socket.IO server
+    web.run_app(app, port=port)
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
