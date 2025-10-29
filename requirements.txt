@@ -6,3 +6,4 @@ vgamepad>=0.0.3
 pillow>=8.0.0
 pip-licenses>=5.0.0
 ssdpy
+zeroconf>=0.39.0
