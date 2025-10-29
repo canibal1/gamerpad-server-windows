@@ -1278,12 +1278,12 @@ pillow
 UNKNOWN
 The Python Imaging Library (PIL) is
 
-    Copyright © 1997-2011 by Secret Labs AB
-    Copyright © 1995-2011 by Fredrik Lundh and contributors
+    Copyright ï¿½ 1997-2011 by Secret Labs AB
+    Copyright ï¿½ 1995-2011 by Fredrik Lundh and contributors
 
 Pillow is the friendly PIL fork. It is
 
-    Copyright © 2010 by Jeffrey A. Clark and contributors
+    Copyright ï¿½ 2010 by Jeffrey A. Clark and contributors
 
 Like PIL, Pillow is licensed under the open source MIT-CMU License:
 
@@ -1427,7 +1427,7 @@ Introduction
   encourage you to use the following text:
 
    """
-    Portions of this software are copyright © <year> The FreeType
+    Portions of this software are copyright ï¿½ <year> The FreeType
     Project (www.freetype.org).  All rights reserved.
    """
 
@@ -1893,23 +1893,23 @@ HarfBuzz is licensed under the so-called "Old MIT" license.  Details follow.
 For parts of HarfBuzz that are licensed under different licenses see individual
 files names COPYING in subdirectories where applicable.
 
-Copyright © 2010-2022  Google, Inc.
-Copyright © 2015-2020  Ebrahim Byagowi
-Copyright © 2019,2020  Facebook, Inc.
-Copyright © 2012,2015  Mozilla Foundation
-Copyright © 2011  Codethink Limited
-Copyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies)
-Copyright © 2009  Keith Stribley
-Copyright © 2011  Martin Hosken and SIL International
-Copyright © 2007  Chris Wilson
-Copyright © 2005,2006,2020,2021,2022,2023  Behdad Esfahbod
-Copyright © 2004,2007,2008,2009,2010,2013,2021,2022,2023  Red Hat, Inc.
-Copyright © 1998-2005  David Turner and Werner Lemberg
-Copyright © 2016  Igalia S.L.
-Copyright © 2022  Matthias Clasen
-Copyright © 2018,2021  Khaled Hosny
-Copyright © 2018,2019,2020  Adobe, Inc
-Copyright © 2013-2015  Alexei Podtelezhnikov
+Copyright ï¿½ 2010-2022  Google, Inc.
+Copyright ï¿½ 2015-2020  Ebrahim Byagowi
+Copyright ï¿½ 2019,2020  Facebook, Inc.
+Copyright ï¿½ 2012,2015  Mozilla Foundation
+Copyright ï¿½ 2011  Codethink Limited
+Copyright ï¿½ 2008,2010  Nokia Corporation and/or its subsidiary(-ies)
+Copyright ï¿½ 2009  Keith Stribley
+Copyright ï¿½ 2011  Martin Hosken and SIL International
+Copyright ï¿½ 2007  Chris Wilson
+Copyright ï¿½ 2005,2006,2020,2021,2022,2023  Behdad Esfahbod
+Copyright ï¿½ 2004,2007,2008,2009,2010,2013,2021,2022,2023  Red Hat, Inc.
+Copyright ï¿½ 1998-2005  David Turner and Werner Lemberg
+Copyright ï¿½ 2016  Igalia S.L.
+Copyright ï¿½ 2022  Matthias Clasen
+Copyright ï¿½ 2018,2021  Khaled Hosny
+Copyright ï¿½ 2018,2019,2020  Adobe, Inc
+Copyright ï¿½ 2013-2015  Alexei Podtelezhnikov
 
 For full copyright notices consult the individual files in the package.
 
@@ -1986,7 +1986,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Files: src/obu.c
 
-Copyright © 2018-2019, VideoLAN and dav1d authors
+Copyright ï¿½ 2018-2019, VideoLAN and dav1d authors
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -2495,7 +2495,7 @@ The Modified (3-clause) BSD License
 ===================================
 
 Copyright (C)2009-2024 D. R. Commander.  All Rights Reserved.<br>
-Copyright (C)2015 Viktor Szathmáry.  All Rights Reserved.
+Copyright (C)2015 Viktor Szathmï¿½ry.  All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -2750,8 +2750,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
 # LibTIFF license
 
-Copyright © 1988-1997 Sam Leffler\
-Copyright © 1991-1997 Silicon Graphics, Inc.
+Copyright ï¿½ 1988-1997 Sam Leffler\
+Copyright ï¿½ 1991-1997 Silicon Graphics, Inc.
 
 Permission to use, copy, modify, distribute, and sell this software and 
 its documentation for any purpose is hereby granted without fee, provided

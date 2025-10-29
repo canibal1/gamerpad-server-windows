@@ -27,10 +27,12 @@ jobs:
             C:\Users\runneradmin\AppData\Local\pip\Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
 
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
+      # ✅ Only this part changed: pin Python version to 3.13
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.13'
+          check-latest: true
 
       - name: Download ViGEmBus MSI
         shell: pwsh

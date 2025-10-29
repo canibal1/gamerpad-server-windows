@@ -8,6 +8,7 @@ import threading
 import socket
 import io
 import logging
+import atexit
 import qrcode
 import vgamepad as vg
 import importlib.metadata as importlib_metadata
@@ -17,6 +18,15 @@ import re
 
 # SSDP/UPnP support
 from ssdpy import SSDPServer
+
+# Bonjour/mDNS (for iOS discovery)
+try:
+    from zeroconf import Zeroconf, ServiceInfo
+    _ZEROCONF_AVAILABLE = True
+except Exception:
+    Zeroconf = None  # type: ignore
+    ServiceInfo = None  # type: ignore
+    _ZEROCONF_AVAILABLE = False
 
 # Gamepad setup
 gamepad: Dict[str, vg.VX360Gamepad] = {}
@@ -64,7 +74,7 @@ def start_server():
 
     app.router.add_get('/', handle)
 
-    # SSDP/UPnP advertisement
+    # SSDP/UPnP advertisement (Android discovery)
     ip_address = get_ip()
     port = 8080
     ssdp_server = SSDPServer(
@@ -76,6 +86,56 @@ def start_server():
         daemon=True
     ).start()
     logger.info(f"SSDP service started: usn=GamerPad Service at http://{ip_address}:{port}/")
+
+    # Bonjour/mDNS advertisement (iOS discovery)
+    zc = None
+    si = None
+    if _ZEROCONF_AVAILABLE:
+        try:
+            hostname = socket.gethostname()
+            # Clean up hostname for mDNS server name
+            safe_host = re.sub(r"[^A-Za-z0-9\-]", "-", hostname).strip("-") or "gamerpad"
+            service_type = "_gamerpad._tcp.local."
+            instance_name = f"GamerPad on {safe_host}"
+            full_name = f"{instance_name}.{service_type}"
+
+            # Prepare IPv4 addresses bytes
+            try:
+                addr_bytes = [socket.inet_aton(ip_address)]
+            except OSError:
+                addr_bytes = None
+
+            props = {
+                b"path": b"/",
+                b"product": b"gamerpad",
+            }
+            si = ServiceInfo(
+                service_type,
+                full_name,
+                addresses=addr_bytes,
+                port=port,
+                properties=props,
+                server=f"{safe_host}.local.",
+            )
+            zc = Zeroconf()
+            zc.register_service(si)
+            logger.info(f"Bonjour service started: name='{instance_name}' type={service_type} port={port}")
+
+            # Ensure cleanup on exit
+            def _cleanup_bonjour():
+                try:
+                    if zc and si:
+                        zc.unregister_service(si)
+                        zc.close()
+                        logger.info("Bonjour service stopped")
+                except Exception:
+                    pass
+
+            atexit.register(_cleanup_bonjour)
+        except Exception as e:
+            logger.warning(f"Bonjour unavailable or failed to start: {e}")
+    else:
+        logger.info("zeroconf not installed; skipping Bonjour (_gamerpad._tcp) registration")
 
     # Start the HTTP + Socket.IO server
     web.run_app(app, port=port)
