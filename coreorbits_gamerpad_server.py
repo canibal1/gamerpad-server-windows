@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QPushButton, QDialog, QTextEdit, QHBoxLayout
 from PySide6.QtCore import QTimer, Qt
 from PySide6.QtGui import QPixmap, QIcon
+import asyncio
 import socketio
 import sys
 from aiohttp import web
@@ -51,6 +52,37 @@ gameControls = {
 # Socket.IO server
 sio = socketio.AsyncServer(cors_allowed_origins='*')
 sio.always_connect = True
+server_loop = None
+
+def _log_emit_error(future):
+    try:
+        future.result()
+    except Exception as exc:
+        logger.warning(f"Failed to emit rumble notification: {exc}")
+
+def _emit_rumble(sid, large_motor, small_motor, led_number):
+    if server_loop is None:
+        logger.warning("Rumble notification received before server loop is ready.")
+        return
+    logger.info(
+        f"Rumble notification: sid={sid} large={int(large_motor)} "
+        f"small={int(small_motor)} led={int(led_number)}"
+    )
+    data = {
+        'large_motor': int(large_motor),
+        'small_motor': int(small_motor),
+        'led_number': int(led_number),
+    }
+    future = asyncio.run_coroutine_threadsafe(
+        sio.emit('rumble', data, to=sid),
+        server_loop,
+    )
+    future.add_done_callback(_log_emit_error)
+
+def _make_rumble_callback(sid):
+    def _callback(client, target, large_motor, small_motor, led_number, user_data):
+        _emit_rumble(sid, large_motor, small_motor, led_number)
+    return _callback
 
 # Helper to get the local IP address
 def get_ip():
@@ -138,7 +170,20 @@ def start_server():
         logger.info("zeroconf not installed; skipping Bonjour (_gamerpad._tcp) registration")
 
     # Start the HTTP + Socket.IO server
-    web.run_app(app, port=port)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    global server_loop
+    server_loop = loop
+
+    async def _run_app():
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, port=port)
+        await site.start()
+        logger.info(f"Web server running at http://{ip_address}:{port}/")
+
+    loop.create_task(_run_app())
+    loop.run_forever()
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
@@ -148,12 +193,26 @@ logger = logging.getLogger()
 @sio.event
 def connect(sid, environ):
     logger.info(f"Client {sid} connected.")
-    gamepad[sid] = vg.VX360Gamepad()
+    gp = vg.VX360Gamepad()
+    gamepad[sid] = gp
+    if hasattr(gp, "register_notification"):
+        try:
+            gp.register_notification(callback_function=_make_rumble_callback(sid))
+            logger.info(f"Rumble notifications enabled for client {sid}")
+        except Exception as exc:
+            logger.warning(f"Failed to register rumble notifications for {sid}: {exc}")
+    else:
+        logger.warning("vgamepad does not support rumble notifications in this version.")
 
 @sio.event
 def disconnect(sid):
     logger.info(f"Client {sid} disconnected.")
-    gamepad.pop(sid, None)
+    gp = gamepad.pop(sid, None)
+    if gp and hasattr(gp, "unregister_notification"):
+        try:
+            gp.unregister_notification()
+        except Exception:
+            pass
 
 @sio.on('left_joystick')
 def left_joystick(sid, data):
